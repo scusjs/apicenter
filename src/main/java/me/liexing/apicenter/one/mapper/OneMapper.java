@@ -23,6 +23,6 @@ public interface OneMapper {
             @Result(property = "share_url", column = "share_url"),
 
     })
-    OneEntity getOneByDate(Date date);
+    OneEntity getOneByDate(String date);
 
 }

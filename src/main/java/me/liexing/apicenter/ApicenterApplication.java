@@ -35,18 +35,4 @@ public class ApicenterApplication {
         template.setValueSerializer(new StringRedisSerializer());
         return template;
     }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowCredentials(true)
-                        .maxAge(3600)
-                        .allowedHeaders("Origin", "X-Requested-With", "Content-Type", "Accept");
-            }
-        };
-    }
 }

@@ -71,17 +71,13 @@ public class OneServiceImpl implements OneService{
             return new Gson().fromJson(redis.get(redis_key), OneEntity.class);
         }
         //检查数据库
-        df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-        try {
-            OneEntity one = oneMapper.getOneByDate((df.parse(df.format(new Date()))));
-            if(one != null){
-                logger.info("get one from db");
-                redis.set(redis_key, new Gson().toJson(one), 1, TimeUnit.HOURS);
-                logger.info("save one to redis");
-                return one;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        df = new SimpleDateFormat("yyyy-MM-dd");
+        OneEntity one = oneMapper.getOneByDate(df.format(new Date()));
+        if(one != null){
+            logger.info("get one from db");
+            redis.set(redis_key, new Gson().toJson(one), 1, TimeUnit.HOURS);
+            logger.info("save one to redis");
+            return one;
         }
 
         RestTemplate restTemplate = new RestTemplate();
@@ -97,7 +93,7 @@ public class OneServiceImpl implements OneService{
         JSONObject body = (JSONObject) new JSONObject(result.getBody()).get("data");
         Date date = new Date();
         try {
-            date = new SimpleDateFormat("yyyy-MM-dd 00:00:00").parse((String) body.get("date"));
+            date = new SimpleDateFormat("yyyy-MM-dd").parse((String) body.get("date"));
         } catch (ParseException e) {
 
         }
@@ -105,7 +101,7 @@ public class OneServiceImpl implements OneService{
         //todo 暂时只处理第一条
         Map content = (Map) content_list.toList().get(0);
         String tmp_content = new Gson().toJson(content);
-        OneEntity one =  new Gson().fromJson(tmp_content, OneEntity.class);
+        one =  new Gson().fromJson(tmp_content, OneEntity.class);
         one.setDate(date);
         redis.set(redis_key, new Gson().toJson(one), 1, TimeUnit.HOURS);
         logger.info("save one to redis");
