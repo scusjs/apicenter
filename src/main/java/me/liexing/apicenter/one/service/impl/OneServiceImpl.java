@@ -39,8 +39,10 @@ public class OneServiceImpl implements OneService{
 
     private List<Object> getIds(){
         //缓存
+        Calendar latestDay = Calendar.getInstance();
+        latestDay.add(Calendar.HOUR, -6);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String redis_key = "id_list" + df.format(new Date());
+        String redis_key = "id_list" + df.format(latestDay.getTime());
         ValueOperations<String, String> redis = redisTemplate.opsForValue();
         if (redisTemplate.hasKey(redis_key)){
             return Arrays.asList(redis.get(redis_key).split(","));
@@ -64,7 +66,9 @@ public class OneServiceImpl implements OneService{
     public OneEntity getIndexData(){
         //检查缓存
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String redis_key = "one_result_" + df.format(new Date());
+        Calendar latestDay = Calendar.getInstance();
+        latestDay.add(Calendar.HOUR, -6);
+        String redis_key = "one_result_" + df.format(latestDay.getTime());
         ValueOperations<String, String> redis = redisTemplate.opsForValue();
         if (redisTemplate.hasKey(redis_key)){
             logger.info("get one from redis");
@@ -72,7 +76,7 @@ public class OneServiceImpl implements OneService{
         }
         //检查数据库
         df = new SimpleDateFormat("yyyy-MM-dd");
-        OneEntity one = oneMapper.getOneByDate(df.format(new Date()));
+        OneEntity one = oneMapper.getOneByDate(df.format(latestDay.getTime()));
         if(one != null){
             logger.info("get one from db");
             redis.set(redis_key, new Gson().toJson(one), 1, TimeUnit.HOURS);
