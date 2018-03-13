@@ -17,15 +17,17 @@ public class ApiSkInterceptor implements HandlerInterceptor{
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         Map parameterMap = request.getParameterMap();
+
+        if (parameterMap.containsKey("sk")){
+            if(skService.isValid(((String[])parameterMap.get("sk"))[0], request.getHeader("origin"))){
+                return true;
+            }
+        }
         try {
             response.getOutputStream().print("sk error, please check!");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (parameterMap.containsKey("sk")){
-            return skService.isValid(((String[])parameterMap.get("sk"))[0], request.getHeader("origin"));
-        }
-
         return false;
     }
 }
