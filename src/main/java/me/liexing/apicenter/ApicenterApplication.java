@@ -35,4 +35,5 @@ public class ApicenterApplication {
         template.setValueSerializer(new StringRedisSerializer());
         return template;
     }
+
 }

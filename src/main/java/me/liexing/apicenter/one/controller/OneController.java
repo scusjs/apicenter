@@ -6,7 +6,7 @@ import me.liexing.apicenter.one.service.impl.OneServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/one")
 public class OneController {
