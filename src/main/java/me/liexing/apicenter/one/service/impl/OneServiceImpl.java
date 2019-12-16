@@ -107,9 +107,14 @@ public class OneServiceImpl implements OneService{
         String tmp_content = new Gson().toJson(content);
         one =  new Gson().fromJson(tmp_content, OneEntity.class);
         one.setDate(date);
-        redis.set(redis_key, new Gson().toJson(one), 1, TimeUnit.HOURS);
+        redis.set(redis_key, new Gson().toJson(one), 2, TimeUnit.HOURS);
         logger.info("save one to redis");
-        oneMapper.insert(one);
+        try {
+            logger.info("insert into db, date:{}, id:{}", date, id);
+            oneMapper.insert(one);
+        } catch (Exception e) {
+            
+        }
         logger.info("save one to db");
         return one;
     }
