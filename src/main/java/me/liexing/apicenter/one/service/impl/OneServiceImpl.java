@@ -110,7 +110,7 @@ public class OneServiceImpl implements OneService{
         redis.set(redis_key, new Gson().toJson(one), 2, TimeUnit.HOURS);
         logger.info("save one to redis");
         try {
-            logger.info("insert into db, date:{}, id:{}", date, id);
+            logger.info("insert into db, date:{}, id:{}", date, one.getId());
             oneMapper.insert(one);
         } catch (Exception e) {
             
